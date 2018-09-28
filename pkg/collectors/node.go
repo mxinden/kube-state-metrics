@@ -17,6 +17,8 @@ limitations under the License.
 package collectors
 
 import (
+	"fmt"
+
 	"github.com/golang/glog"
 	"github.com/prometheus/client_golang/prometheus"
 	"golang.org/x/net/context"
@@ -216,6 +218,8 @@ func nodeLabelsDesc(labelKeys []string) *prometheus.Desc {
 }
 
 func (nc *nodeCollector) collectNode(ch chan<- prometheus.Metric, n v1.Node) {
+	fmt.Printf("generating metrics for node %q with provider id %q\n", n.Name, n.Spec.ProviderID)
+
 	addGauge := func(desc *prometheus.Desc, v float64, lv ...string) {
 		lv = append([]string{n.Name}, lv...)
 		ch <- prometheus.MustNewConstMetric(desc, prometheus.GaugeValue, v, lv...)
